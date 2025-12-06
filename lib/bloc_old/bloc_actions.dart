@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:state_management/bloc/person.dart';
+import 'package:state_management/bloc_old/person.dart';
+
 import 'package:state_management/main.dart';
 
 enum PersonUrl { persons1, persons2 }

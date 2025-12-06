@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:state_management/bloc/bloc_actions.dart';
-import 'package:state_management/bloc/person.dart';
+import 'package:state_management/bloc_old/bloc_actions.dart';
+import 'package:state_management/bloc_old/person.dart';
 import 'package:state_management/main.dart';
 import 'package:flutter/foundation.dart' show immutable;
 
@@ -48,7 +48,7 @@ class PersonBloc extends Bloc<LoadAction, FetchResults?>{
       }else {
         final loader = event.loader;
         final persons = await loader(url);
-        _cache[url]=  persons;
+        // _cache[url]=  persons;
         final result = FetchResults(persons: persons, isRetrievedFromCache: false);
         emit(result);
       }
