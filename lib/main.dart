@@ -5,6 +5,7 @@ import 'package:bloc/bloc.dart';
 import 'dart:math' as math show Random;
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:state_management/bloc/app_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       home: BlocProvider(
-        create: (context) => (),
+        create: (context) => AppBloc(loginApi: null, notesApi: null),
         child: MyHomePage(),
       ),
     );
@@ -49,4 +50,4 @@ class _MyHomePageState extends State<MyHomePage> {
   } 
 }
 
-//3.12
+//4.21
