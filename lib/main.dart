@@ -21,10 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: BlocProvider(
-        create: (context) => AppBloc(loginApi: null, notesApi: null),
-        child: MyHomePage(),
-      ),
+      home: MyHomePage(),
     );
   }
 }
@@ -40,14 +37,16 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     late final Bloc myBloc;
-    return Scaffold(
-      body: Column(
-        children: [
-
-        ],
+    return BlocProvider(
+      create: (context) => AppBloc(loginApi: loginApi, notesApi: notesApi),
+      child: Scaffold(
+        body: Column(
+          children: [
+          ],
+        ),
       ),
     );
-  } 
+  }
 }
 
 //4.21
