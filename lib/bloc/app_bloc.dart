@@ -8,10 +8,12 @@ import 'package:state_management/notes_api.dart';
 class AppBloc extends Bloc<AppAction,AppState> {
   final LoginApiProtocol loginApi;
   final NotesApiProtocol notesApi;
+  final LoginHandle acceptableLoginHandle;
 
   AppBloc({
     required this.loginApi,
-    required this.notesApi
+    required this.notesApi,
+    required this.acceptableLoginHandle
 }): super(const AppState.empty()){
     on<LoginAction>((event, emit)async{
       emit(AppState(isLoading: true, fetchedNotes: null, loginHandle: null, loginErrors: null));
