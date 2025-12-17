@@ -1,43 +1,34 @@
-import 'package:bloc/bloc.dart';
-import 'package:state_management/bloc/actions.dart';
-import 'package:state_management/bloc/app_state.dart';
-import 'package:state_management/login_api.dart';
-import 'package:state_management/models.dart';
-import 'package:state_management/notes_api.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:math'as math;
+typedef AppBLocRandomUrlPicker = String Function(Iterable<String>allUrls);
 
-class AppBloc extends Bloc<AppAction,AppState> {
-  final LoginApiProtocol loginApi;
-  final NotesApiProtocol notesApi;
-  final LoginHandle acceptableLoginHandle;
 
-  AppBloc({
-    required this.loginApi,
-    required this.notesApi,
-    required this.acceptableLoginHandle
-}): super(const AppState.empty()){
-    on<LoginAction>((event, emit)async{
-      emit(AppState(isLoading: true, fetchedNotes: null, loginHandle: null, loginErrors: null));
-      //log the user in
-      final loginHandle = await loginApi.login(email: event.email, password: event.password);
-      emit(
-        AppState(isLoading: false , fetchedNotes: null, loginHandle: loginHandle, loginErrors: loginHandle ==null ? LoginErrors.invalidHandle : null)
-      );
-     
+extension RandomElement<T> on Iterable<T>{
+  T getRandomElement()=> elementAt(math.Random().nextInt(length));
+}
 
-    });
-    on<LoadNotesAction>((event, emit)async{
-      emit(AppState(isLoading: true, fetchedNotes: null, loginHandle: state.loginHandle, loginErrors: null));
-      final loginHandle = state.loginHandle;
-      if(loginHandle != const LoginHandle.fooBar()){
-        emit(AppState(isLoading: false, fetchedNotes: null, loginHandle: loginHandle, loginErrors: LoginErrors.invalidHandle));
-        return;
-      }
-      //we have valid login handle
-      final notes = await notesApi.getNotes(loginHandle: loginHandle!);
-      emit(AppState(isLoading: false, fetchedNotes: notes, loginHandle: loginHandle, loginErrors: null));
 
-    });
-  
-    
+class AppBloc extends Bloc<AppEvent,AppState>{
+
+  String _pickRandomUrl(Iterable<String>allUrls)=> allUrls.getRandomElement();
+
+  AppBloc({required Iterable<String>urls, Duration? waitBeforeDuration, AppBLocRandomUrlPicker? urlPicker}) : super(const AppState.empty(){
+    on<LoadNextUrlEvent>((event, emit)async{
+       emit(const AppState(isLoading: true, data: null, error:null));
+       final url = (urlPicker?? _pickRandomUrl)(urls);
+       try{
+         if(waitBeforeLoading !=null){
+  await Future.delayed(waitBeforeDuration);
   }
+         final bundle  = NetworkAssetBundle(Uri.parse(url));
+         final data= (await bundle.load(url).buffer.asUnin8List());
+         emit(isLoading: false, data :data, error: null);
+
+  } 
+  }catch(e){
+         emit(isloading: false, error: e, data: null);
+  }
+  })
+  });
 }
