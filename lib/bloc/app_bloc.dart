@@ -8,6 +8,8 @@ extension RandomElement<T> on Iterable<T>{
   T getRandomElement()=> elementAt(math.Random().nextInt(length));
 }
 
+typedef AppBlocUrlLoader = Future<Uint8List>Function(String url);
+
 
 class AppBloc extends Bloc<AppEvent,AppState>{
 
@@ -17,6 +19,7 @@ class AppBloc extends Bloc<AppEvent,AppState>{
     on<LoadNextUrlEvent>((event, emit)async{
        emit(const AppState(isLoading: true, data: null, error:null));
        final url = (urlPicker?? _pickRandomUrl)(urls);
+       AppBlocUrlLoader urlLoader;
        try{
          if(waitBeforeLoading !=null){
   await Future.delayed(waitBeforeDuration);
